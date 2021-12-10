@@ -5,6 +5,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
@@ -181,5 +182,50 @@ class BugsnagReactNative(private val reactContext: ReactApplicationContext) :
         } catch (exc: Throwable) {
             logFailure("getPayloadInfo", exc)
         }
+    }
+
+    @ReactMethod
+    fun addFeatureFlag(name: String, variant: String?) {
+        try {
+            plugin.addFeatureFlag(name, variant)
+        } catch (exc: Throwable) {
+            logFailure("addFeatureFlag", exc)
+        }
+    }
+
+    @ReactMethod
+    fun addFeatureFlags(flags: ReadableArray) {
+        try {
+            for(index in 0 until flags.size()) {
+                val flag = flags.getMap(index) ?: continue
+                val name = flag.safeString("name") ?: continue
+
+                plugin.addFeatureFlag(name, flag.safeString("variant"))
+            }
+        } catch (exc: Throwable) {
+            logFailure("addFeatureFlags", exc)
+        }
+    }
+
+    @ReactMethod
+    fun clearFeatureFlag(name: String) {
+        try {
+            plugin.clearFeatureFlag(name)
+        } catch (exc: Throwable) {
+            logFailure("clearFeatureFlag", exc)
+        }
+    }
+
+    @ReactMethod
+    fun clearFeatureFlags() {
+        try {
+            plugin.clearFeatureFlags()
+        } catch (exc: Throwable) {
+            logFailure("clearFeatureFlags", exc)
+        }
+    }
+
+    private fun ReadableMap.safeString(key: String): String? {
+        return if(hasKey(key)) getString(key) else null
     }
 }
