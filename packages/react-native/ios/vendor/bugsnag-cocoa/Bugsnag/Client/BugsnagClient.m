@@ -311,9 +311,11 @@ __attribute__((annotate("oclint:suppress[too many methods]")))
     [self.configuration validate];
     [self.crashSentry install:self.configuration onCrash:&BSSerializeDataCrashHandler];
     [self computeDidCrashLastLaunch];
-    [self.breadcrumbs removeAllBreadcrumbs];
+    // [self.breadcrumbs removeAllBreadcrumbs];
     [self setupConnectivityListener];
     [self.notificationBreadcrumbs start];
+
+    NSLog(@"I am HERE");
 
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
 
